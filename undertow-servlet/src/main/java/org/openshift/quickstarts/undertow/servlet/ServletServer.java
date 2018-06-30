@@ -21,16 +21,6 @@ import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 
-import io.undertow.Handlers;
-import io.undertow.Undertow;
-import io.undertow.server.HttpHandler;
-import io.undertow.server.handlers.PathHandler;
-import io.undertow.servlet.api.DeploymentInfo;
-import io.undertow.servlet.api.DeploymentManager;
-
-import static io.undertow.servlet.Servlets.defaultContainer;
-import static io.undertow.servlet.Servlets.deployment;
-import static io.undertow.servlet.Servlets.servlet;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -44,52 +34,52 @@ public class ServletServer {
 
     public static final String MYAPP = "/";
 
-    public static void main(final String[] args) {
+    public static void main(final String[] args) throws InterruptedException {
 
         while (true) {
             System.out.println("Jestem super!!");
             Thread.sleep(3 * 1000);
         }
 
-        try {
-
-            DeploymentInfo servletBuilder = deployment()
-                    .setClassLoader(ServletServer.class.getClassLoader())
-                    .setContextPath(MYAPP)
-                    .setDeploymentName("test.war")
-                    .addServlets(
-                            servlet("MessageServlet", MessageServlet.class)
-                                    .addInitParam("message", "Hello World")
-                                    .addMapping("/*"),
-                            servlet("MyServlet", MessageServlet.class)
-                                    .addInitParam("message", "MyServlet")
-                                    .addMapping("/myservlet"));
-
-            DeploymentManager manager = defaultContainer().addDeployment(servletBuilder);
-            manager.deploy();
-
-            SSLContext sslContext = null;
-            String filename = System.getenv("HTTPS_KEYSTORE");
-            if (filename != null) {
-                String directory = System.getenv("HTTPS_KEYSTORE_DIR");
-                char[] password = System.getenv("HTTPS_PASSWORD").toCharArray();
-                File keystore = new File(directory, filename);
-
-                sslContext = createSSLContext(loadKeyStore(keystore, password), password);
-            }
-
-            HttpHandler servletHandler = manager.start();
-            PathHandler path = Handlers.path(Handlers.redirect(MYAPP))
-                    .addPrefixPath(MYAPP, servletHandler);
-            Undertow server = Undertow.builder()
-                    .addHttpListener(8080, "0.0.0.0")
-                    .addHttpsListener(8443, "0.0.0.0", sslContext)
-                    .setHandler(path)
-                    .build();
-            server.start();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//
+//            DeploymentInfo servletBuilder = deployment()
+//                    .setClassLoader(ServletServer.class.getClassLoader())
+//                    .setContextPath(MYAPP)
+//                    .setDeploymentName("test.war")
+//                    .addServlets(
+//                            servlet("MessageServlet", MessageServlet.class)
+//                                    .addInitParam("message", "Hello World")
+//                                    .addMapping("/*"),
+//                            servlet("MyServlet", MessageServlet.class)
+//                                    .addInitParam("message", "MyServlet")
+//                                    .addMapping("/myservlet"));
+//
+//            DeploymentManager manager = defaultContainer().addDeployment(servletBuilder);
+//            manager.deploy();
+//
+//            SSLContext sslContext = null;
+//            String filename = System.getenv("HTTPS_KEYSTORE");
+//            if (filename != null) {
+//                String directory = System.getenv("HTTPS_KEYSTORE_DIR");
+//                char[] password = System.getenv("HTTPS_PASSWORD").toCharArray();
+//                File keystore = new File(directory, filename);
+//
+//                sslContext = createSSLContext(loadKeyStore(keystore, password), password);
+//            }
+//
+//            HttpHandler servletHandler = manager.start();
+//            PathHandler path = Handlers.path(Handlers.redirect(MYAPP))
+//                    .addPrefixPath(MYAPP, servletHandler);
+//            Undertow server = Undertow.builder()
+//                    .addHttpListener(8080, "0.0.0.0")
+//                    .addHttpsListener(8443, "0.0.0.0", sslContext)
+//                    .setHandler(path)
+//                    .build();
+//            server.start();
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
 
     private static KeyStore loadKeyStore(File file, char[] password) throws Exception {
