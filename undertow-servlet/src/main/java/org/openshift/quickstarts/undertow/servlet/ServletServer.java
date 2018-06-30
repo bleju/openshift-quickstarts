@@ -47,7 +47,7 @@ public class ServletServer {
     public static void main(final String[] args) {
 
         while (true) {
-            System.out.println("Jestem super!");
+            System.out.println("Jestem super!!");
             Thread.sleep(3 * 1000);
         }
 
