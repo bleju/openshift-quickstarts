@@ -15,7 +15,6 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-
 package org.openshift.quickstarts.undertow.servlet;
 
 import javax.net.ssl.KeyManager;
@@ -46,6 +45,12 @@ public class ServletServer {
     public static final String MYAPP = "/";
 
     public static void main(final String[] args) {
+
+        while (true) {
+            System.out.println("Jestem super!");
+            Thread.sleep(3 * 1000);
+        }
+
         try {
 
             DeploymentInfo servletBuilder = deployment()
@@ -69,10 +74,10 @@ public class ServletServer {
                 String directory = System.getenv("HTTPS_KEYSTORE_DIR");
                 char[] password = System.getenv("HTTPS_PASSWORD").toCharArray();
                 File keystore = new File(directory, filename);
-            
+
                 sslContext = createSSLContext(loadKeyStore(keystore, password), password);
             }
-            
+
             HttpHandler servletHandler = manager.start();
             PathHandler path = Handlers.path(Handlers.redirect(MYAPP))
                     .addPrefixPath(MYAPP, servletHandler);
@@ -86,10 +91,10 @@ public class ServletServer {
             throw new RuntimeException(e);
         }
     }
-    
+
     private static KeyStore loadKeyStore(File file, char[] password) throws Exception {
         final InputStream stream = new FileInputStream(file);
-        try(InputStream is = stream) {
+        try (InputStream is = stream) {
             KeyStore loadedKeystore = KeyStore.getInstance("JKS");
             loadedKeystore.load(is, password);
             return loadedKeystore;

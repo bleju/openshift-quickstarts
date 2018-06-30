@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class MessageServlet extends HttpServlet {
 
-    public static final String MESSAGE = "message";
+    public static final String MESSAGE = "message";;
 
     private String message;
 
